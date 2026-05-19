@@ -1,41 +1,38 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert -o k8s/
-    kompose.version: 1.26.0 (40646f47)
-  creationTimestamp: null
+  name: mongo
   labels:
     io.kompose.service: mongo
-  name: mongo
 spec:
-  replicas: 1
+  replicas: 1                      # Database always stays at 1 replica
   selector:
     matchLabels:
       io.kompose.service: mongo
   strategy:
-    type: Recreate
+    type: Recreate                 # Recreate ensures only 1 DB pod at a time
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert -o k8s/
-        kompose.version: 1.26.0 (40646f47)
-      creationTimestamp: null
       labels:
         io.kompose.service: mongo
     spec:
       containers:
-        - image: mvertes/alpine-mongo:latest
-          name: mongo
+        - name: mongo
+          image: mongo:6.0          # Official MongoDB image (more stable)
           ports:
             - containerPort: 27017
-          resources: {}
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
           volumeMounts:
-            - mountPath: /data/db/
+            - mountPath: /data/db   # MongoDB stores all data here
               name: flaskapp
       restartPolicy: Always
       volumes:
         - name: flaskapp
           persistentVolumeClaim:
-            claimName: flaskapp
-status: {}
+            claimName: flaskapp     # Attach the PVC so data survives restarts
