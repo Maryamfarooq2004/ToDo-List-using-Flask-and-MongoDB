@@ -102,6 +102,7 @@ body::before {
 	border: 1px solid var(--line);
 	border-radius: var(--radius-xl);
 	background: linear-gradient(180deg, rgba(11, 16, 30, 0.82), rgba(8, 12, 22, 0.66));
+	-webkit-backdrop-filter: blur(18px);
 	backdrop-filter: blur(18px);
 	box-shadow: var(--shadow);
 }
@@ -190,6 +191,7 @@ body::before {
 	border: 1px solid var(--line);
 	border-radius: var(--radius-xl);
 	background: linear-gradient(180deg, rgba(12, 18, 31, 0.85), rgba(8, 12, 22, 0.78));
+	-webkit-backdrop-filter: blur(18px);
 	backdrop-filter: blur(18px);
 	box-shadow: var(--shadow);
 }
@@ -225,6 +227,7 @@ body::before {
 	flex-wrap: wrap;
 	gap: 12px;
 	align-items: center;
+	justify-content: flex-start;
 }
 
 .hero-aside,
@@ -362,6 +365,7 @@ select:focus {
 	border: 1px solid transparent;
 	transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 	cursor: pointer;
+	white-space: nowrap;
 }
 
 .button:hover,

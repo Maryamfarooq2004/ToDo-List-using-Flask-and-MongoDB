@@ -29,7 +29,7 @@
 			</label>
 			<label class="field">
 				<span>Due date</span>
-				<input type="date" name="date" value="{{ task['date'] }}">
+				<input type="date" name="date" value="{{ task['date'] or '' }}">
 			</label>
 			<label class="field field-wide">
 				<span>Description</span>
@@ -38,10 +38,9 @@
 			<label class="field">
 				<span>Priority</span>
 				<select name="pr" required>
-					<option selected>{{ task['pr'] }}</option>
-					<option>Low !</option>
-					<option>Medium !!</option>
-					<option>High !!!</option>
+					<option value="Low !" {% if task['pr'] == 'Low !' or not task['pr'] %}selected{% endif %}>Low !</option>
+					<option value="Medium !!" {% if task['pr'] == 'Medium !!' %}selected{% endif %}>Medium !!</option>
+					<option value="High !!!" {% if task['pr'] == 'High !!!' %}selected{% endif %}>High !!!</option>
 				</select>
 			</label>
 		</div>

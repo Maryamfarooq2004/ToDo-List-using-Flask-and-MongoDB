@@ -68,8 +68,8 @@ def action ():
 	#Adding a Task
 	name=request.values.get("name")
 	desc=request.values.get("desc")
-	date=request.values.get("date")
-	pr=request.values.get("pr")
+	date=request.values.get("date") or ""
+	pr=request.values.get("pr") or "Low !"
 	todos.insert_one({ "name":name, "desc":desc, "date":date, "pr":pr, "done":"no"})
 	return redirect("/list")
 
@@ -91,8 +91,8 @@ def action3 ():
 	#Updating a Task with various references
 	name=request.values.get("name")
 	desc=request.values.get("desc")
-	date=request.values.get("date")
-	pr=request.values.get("pr")
+	date=request.values.get("date") or ""
+	pr=request.values.get("pr") or "Low !"
 	id=request.values.get("_id")
 	todos.update_one({"_id":ObjectId(id)}, {'$set':{ "name":name, "desc":desc, "date":date, "pr":pr }})
 	return redirect("/")

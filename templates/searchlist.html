@@ -34,6 +34,8 @@
 			</thead>
 			<tbody>
 			{% for todo in result_list %}
+				{% set due_date = todo['date'] or '—' %}
+				{% set priority = todo['pr'] or '' %}
 				<tr>
 					<td>
 						<span class="status-pill {% if todo['done'] == 'yes' %}status-done{% else %}status-open{% endif %}">
@@ -42,17 +44,17 @@
 					</td>
 					<td class="task-name">{{ todo["name"] }}</td>
 					<td class="task-desc">{{ todo["desc"] }}</td>
-					<td class="task-date">{{ todo["date"] }}</td>
+					<td class="task-date">{{ due_date }}</td>
 					<td>
-						<span class="priority-pill {% if 'High' in todo['pr'] %}priority-high{% elif 'Medium' in todo['pr'] %}priority-medium{% else %}priority-low{% endif %}">
-							{{ todo["pr"] }}
+						<span class="priority-pill {% if 'High' in priority %}priority-high{% elif 'Medium' in priority %}priority-medium{% else %}priority-low{% endif %}">
+							{{ priority or 'Low !' }}
 						</span>
 					</td>
 					<td>
 						<div class="actions">
-							<a class="icon-button status-toggle" href="./done?_id={{ todo['_id'] }}">Toggle</a>
-							<a class="icon-button" href="./update?_id={{ todo['_id'] }}">Edit</a>
-							<a class="icon-button danger" href="./remove?_id={{ todo['_id'] }}">Delete</a>
+							<a class="icon-button status-toggle" href="./done?_id={{ todo['_id'] }}" aria-label="Mark task complete or reopen">{% if todo['done'] == 'yes' %}Reopen{% else %}Mark done{% endif %}</a>
+							<a class="icon-button" href="./update?_id={{ todo['_id'] }}" aria-label="Edit task">Edit</a>
+							<a class="icon-button danger" href="./remove?_id={{ todo['_id'] }}" aria-label="Delete task">Delete</a>
 						</div>
 					</td>
 				</tr>
