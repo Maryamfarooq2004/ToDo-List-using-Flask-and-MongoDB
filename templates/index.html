@@ -1,116 +1,153 @@
-<html>
-	<head>
-		<title>{{t}}</title>
-		<!-- href="/static/assets/style.css"-->
-		<link rel="stylesheet" type="text/css"  href="{{ url_for('static',filename='assets/style.css')}}" >
-		<link rel="stylesheet" type="text/css"  href="{{ url_for('static',filename='assets/emoji.css')}}" >
-		<script src="{{ url_for('static',filename='assets/twemoji.min.js')}}"></script>  
-		<script src="{{ url_for('static',filename='assets/emoji.js')}}"></script>
-	</head>
-<body>
-	<h1>{{ h }}</h1>
-	<ul>
-		<li><a href="/list" class="{{ a1 }}">ALL</a></li>
-		<li><a href="/" class="{{ a2 }}">Uncompleted</a></li>
-		<li><a href="/completed" class="{{ a3 }}">Completed</a></li>
-		<li style="float:right"><a href="/about">About</a></li>
-	</ul>
-	{% if error %}
-		<div class="alert alert-danger">
-	  		<strong>Error!</strong> {{ error }}
+{% extends "base.html" %}
+
+{% block content %}
+{% set todo_list = todos|list %}
+<section class="hero card">
+	<div class="hero-copy">
+		<span class="eyebrow">Private task atelier</span>
+		<h1>Shape your work inside a luminous planner built to feel premium.</h1>
+		<p>
+			Track open work, mark items complete with one tap, and move through your day in a richer, more cinematic workspace.
+		</p>
+		<div class="hero-actions">
+			<a class="button button-primary" href="#new-task">Create new note</a>
+			<a class="button button-secondary" href="#task-board">Reveal board</a>
 		</div>
-	{% endif %}
-	<hr>
-	{% if todos[0] %}
-	<div span="right">
-	<form action="/search"	method="GET" >
-		<table class="none" id="close">
-		<tr>
-		<td></td><td></td>
-		<td><big><b>Search Reference:</b></big></td>
-		<td><select name="refer" required>
+	</div>
+	<div class="hero-aside">
+		<div class="metric-card accent">
+			<span class="metric-label">Experience</span>
+			<strong>Velvet, glass, and glow</strong>
+			<p>A darker palette with richer depth, sharper typography, and more luxurious surfaces.</p>
+		</div>
+		<div class="metric-grid">
+			<div class="metric-card">
+				<span class="metric-label">Search</span>
+				<strong>Velocious</strong>
+			</div>
+			<div class="metric-card">
+				<span class="metric-label">Status</span>
+				<strong>At a glance</strong>
+			</div>
+		</div>
+	</div>
+</section>
+
+{% if error %}
+<div class="notice notice-error">{{ error }}</div>
+{% endif %}
+
+<section class="card toolbar">
+	<div>
+		<span class="section-label">Search across the atelier</span>
+		<h2>Find any task by reference, instantly.</h2>
+	</div>
+	<form class="search-form" action="/search" method="GET">
+		<select name="refer" required>
 			<option value="id">Unique ID</option>
 			<option value="name">Task Name</option>
 			<option value="desc">Description</option>
 			<option value="date">Date</option>
 			<option value="pr">Priority</option>
-		</select></td>
-		<td><input type="text" name="key" placeholder="Search Task" size="15" /></td>
-		<td><button type="submit">Search</button></td>
-		</tr>
-		</table>
+		</select>
+		<input type="text" name="key" placeholder="Search task" required>
+		<button type="submit" class="button button-primary">Search</button>
 	</form>
-	</div>
-	<b><big>To-Do LIST :</big></b>
-	<table>
-	    <tr id="row">
-	    	<th class="status">Status</th>
-	    	<th class="name">Task Name</th>
-	    	<th class="desc">Description Name</th>
-	    	<th class="date">Date</th>
-	    	<th class="pr">Priority</th>
-		<th class="func1">Remove</th>
-		<th class="func2">Modify</th>
-	    </tr>
-	{% for todo in todos %}
-		<tr class="datas">
-			<td><a href="./done?_id={{ todo['_id'] }}"><input type="image" src="static/images/{{todo['done']}}.png" alt="Submit ME"></a></td>
-			<td class="name">{{ todo["name"] }}</td>
-			<td class="desc">{{ todo["desc"] }}</td>
-			<td class="date">{{ todo["date"] }}</td>
-			<td class="pr">{{ todo["pr"] }}</td>
-			<td class="func1"><a href="./remove?_id={{ todo['_id'] }}">🗑️</a></td>
-			<td class="func2"><a href="./update?_id={{ todo['_id'] }}">📝</a></td>
-		</tr>
-	{% endfor %}
-	</table>
-	{% else %}
-		<div class="danger">
-			<h4>No Tasks in the List !!</h4>
+</section>
+
+<section class="card" id="task-board">
+	<div class="section-heading">
+		<div>
+			<span class="section-label">Live board</span>
+			<h2>Your tasks with editorial polish</h2>
 		</div>
+		<span class="section-chip">Luxury detail, fast actions</span>
+	</div>
+
+	{% if todo_list %}
+	<div class="table-wrap">
+		<table class="task-table">
+			<thead>
+				<tr>
+					<th>Status</th>
+					<th>Task</th>
+					<th>Description</th>
+					<th>Date</th>
+					<th>Priority</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+			{% for todo in todo_list %}
+				<tr>
+					<td>
+						<span class="status-pill {% if todo['done'] == 'yes' %}status-done{% else %}status-open{% endif %}">
+							{% if todo['done'] == 'yes' %}Completed{% else %}Open{% endif %}
+						</span>
+					</td>
+					<td class="task-name">{{ todo["name"] }}</td>
+					<td class="task-desc">{{ todo["desc"] }}</td>
+					<td class="task-date">{{ todo["date"] }}</td>
+					<td>
+						<span class="priority-pill {% if 'High' in todo['pr'] %}priority-high{% elif 'Medium' in todo['pr'] %}priority-medium{% else %}priority-low{% endif %}">
+							{{ todo["pr"] }}
+						</span>
+					</td>
+					<td>
+						<div class="actions">
+							<a class="icon-button status-toggle" href="./done?_id={{ todo['_id'] }}">Toggle</a>
+							<a class="icon-button" href="./update?_id={{ todo['_id'] }}">Edit</a>
+							<a class="icon-button danger" href="./remove?_id={{ todo['_id'] }}">Delete</a>
+						</div>
+					</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	{% else %}
+	<div class="empty-state">
+		<h3>No tasks yet</h3>
+		<p>Use the form below to create the first item on your board.</p>
+	</div>
 	{% endif %}
-	<hr/>
-	<form action="/action" method="POST">
-	<table class="none">
-		<tr class="row success">
-			<td>
-				<h2>Add a Task</h2>
-			</td>
-		</tr>
-		<tr class="row">
-			<td class="col-2">
-				<input type="text" name="name" placeholder="Taskname" />
-			</td>
-		</tr>
-		<tr class="row">
-			<td class="col-4">
-				<textarea name="desc" rows="2" cols="30" placeholder="Enter Description here..." required></textarea>
-			</td>
-		</tr>
-		<tr class="row">
-			<td class="col-2">
-				<input type="date" name="date" placeholder="Date" />
-			</td>
-		</tr>
-		<tr class="row">
-			<td class="col-2">
-				<select name="pr">
-					<option selected disabled>Priority</option>
+</section>
+
+<section class="card form-card" id="new-task">
+	<div class="section-heading">
+		<div>
+			<span class="section-label">Create new work</span>
+			<h2>Add a task</h2>
+		</div>
+		<span class="section-chip">Elegant entry</span>
+	</div>
+	<form class="task-form" action="/action" method="POST">
+		<div class="form-grid">
+			<label class="field">
+				<span>Task name</span>
+				<input type="text" name="name" placeholder="Midnight launch checklist" required>
+			</label>
+			<label class="field">
+				<span>Due date</span>
+				<input type="date" name="date">
+			</label>
+			<label class="field field-wide">
+				<span>Description</span>
+				<textarea name="desc" rows="4" placeholder="Add a polished description of what needs to happen." required></textarea>
+			</label>
+			<label class="field">
+				<span>Priority</span>
+				<select name="pr" required>
+					<option selected disabled>Choose priority</option>
 					<option>Low !</option>
 					<option>Medium !!</option>
 					<option>High !!!</option>
 				</select>
-			</td>
-		</tr>
-		<tr class="row">
-			<td class="col-2">
-				<button type="submit"> Create </button>
-			</td>
-		</tr>
-	</table>
+			</label>
+		</div>
+		<div class="form-actions">
+			<button type="submit" class="button button-primary">Create task</button>
+		</div>
 	</form>
-	<script>
-
-	</script>
-</body>
-</html>
+</section>
+{% endblock %}

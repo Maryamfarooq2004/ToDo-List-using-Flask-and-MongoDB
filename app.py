@@ -11,8 +11,8 @@ db = client.camp2016    #Select the database
 todos = db.todo #Select the collection
 
 app = Flask(__name__)
-title = "TODO with Flask"
-heading = "ToDo Reminder"
+title = "Velvet Orbit Tasks"
+heading = "Opaline Planner"
 #modify=ObjectId()
 
 def redirect_url():

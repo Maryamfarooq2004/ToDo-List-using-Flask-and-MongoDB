@@ -1,37 +1,32 @@
-<html>
-	<head>
-		<title>{{t}}</title>
-		<link rel="stylesheet" type="text/css"  href="{{ url_for('static',filename='assets/style.css')}}" >
-		<link rel="stylesheet" type="text/css"  href="{{ url_for('static',filename='assets/emoji.css')}}" >
-		<script src="{{ url_for('static',filename='assets/twemoji.min.js')}}"></script>  
-		<script src="{{ url_for('static',filename='assets/emoji.js')}}"></script>
-		<style>
-			body {
-				background-color:white;
-			}
-			.credits {
-				margin:10px;
-			}
-		</style>
-	</head>
-<body>
-	<h1>{{ h }}</h1>
-	<ul>
-		<li><a href="/list" class="{{ a1 }}">ALL</a></li>
-		<li><a href="/" class="{{ a2 }}">Uncompleted</a></li>
-		<li><a href="/completed" class="{{ a3 }}">Completed</a></li>
-		<li style="float:right"><a href="/about">About</a></li>
-	</ul>
-	<hr>
-	<h3>Credits :</h3>
-	<div class='credits'>
-		<b>Prashant Shahi</b>
-		<p>
-			<span>Email:</span>
-			<a href="mailto:me@prashantshahi.dev">me@prashantshahi.dev</a>
-		</p>
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero card compact-hero about-hero">
+	<div class="hero-copy">
+		<span class="eyebrow">About this build</span>
+		<h1>Same task engine, now dressed like a premium product.</h1>
+		<p>This version swaps the old plain layout for a polished dashboard aesthetic with stronger hierarchy, better spacing, and clearer action states.</p>
 	</div>
-	<hr>
-	<p>Made with ❤️ from Karnali, Nepal ☕</p>
-</body>
-</html>
+	<div class="hero-aside">
+		<div class="metric-card accent">
+			<span class="metric-label">Design language</span>
+			<strong>Midnight luxury</strong>
+			<p>Dark gradient surfaces, vivid accents, and card-based structure.</p>
+		</div>
+	</div>
+</section>
+
+<section class="card">
+	<div class="section-heading">
+		<div>
+			<span class="section-label">Credits</span>
+			<h2>Built by Prashant Shahi</h2>
+		</div>
+	</div>
+	<div class="profile-card">
+		<p>The app keeps the original Flask and MongoDB workflow, but the presentation is rebuilt to feel like a modern product demo.</p>
+		<p><strong>Email:</strong> <a href="mailto:me@prashantshahi.dev">me@prashantshahi.dev</a></p>
+		<p class="muted">Made with heart from Karnali, Nepal.</p>
+	</div>
+</section>
+{% endblock %}
